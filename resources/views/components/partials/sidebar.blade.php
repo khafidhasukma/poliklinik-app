@@ -79,6 +79,12 @@
                 <i class="fas fa-pills w-4 text-center"></i>
                 Manajemen Obat
             </a>
+
+            <a href="{{ route('admin.pembayaran.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('admin.pembayaran.*') ? $active : $inactive }}">
+                <i class="fas fa-money-check-dollar w-4 text-center"></i>
+                Verifikasi Pembayaran
+            </a>
         </div>
         @endif
 
@@ -98,6 +104,23 @@
                 Dashboard Pasien
             </a>
 
+            <a href="{{ route('pasien.daftar.create') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('pasien.daftar.*') ? $active : $inactive }}">
+                <i class="fas fa-clipboard-list w-4 text-center"></i>
+                Daftar Poli
+            </a>
+
+            <a href="{{ route('pasien.riwayat.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('pasien.riwayat.*') ? $active : $inactive }}">
+                <i class="fas fa-clock-rotate-left w-4 text-center"></i>
+                Riwayat Pendaftaran
+            </a>
+
+            <a href="{{ route('pasien.pembayaran.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('pasien.pembayaran.*') ? $active : $inactive }}">
+                <i class="fas fa-credit-card w-4 text-center"></i>
+                Pembayaran
+            </a>
 
         </div>
         @endif
@@ -116,6 +139,24 @@
                 class="{{ $baseLink }} {{ request()->routeIs('dokter.dashboard') ? $active : $inactive }}">
                 <i class="fas fa-stethoscope w-4 text-center"></i>
                 Dashboard Dokter
+            </a>
+
+            <a href="{{ route('dokter.jadwal-periksa.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('dokter.jadwal-periksa.*') ? $active : $inactive }}">
+                <i class="fas fa-calendar-days w-4 text-center"></i>
+                Jadwal Periksa
+            </a>
+
+            <a href="{{ route('dokter.periksa-pasien.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('dokter.periksa-pasien.*') ? $active : $inactive }}">
+                <i class="fas fa-clipboard-check w-4 text-center"></i>
+                Periksa Pasien
+            </a>
+
+            <a href="{{ route('dokter.riwayat-pasien.index') }}"
+                class="{{ $baseLink }} {{ request()->routeIs('dokter.riwayat-pasien.*') ? $active : $inactive }}">
+                <i class="fas fa-file-medical w-4 text-center"></i>
+                Riwayat Pasien
             </a>
 
         </div>

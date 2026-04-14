@@ -26,18 +26,27 @@
 
         <div class="text-right hidden sm:block">
             <div class="text-sm font-semibold leading-tight">
-                {{ auth()->user()->name ?? 'Pengguna' }}
+                @php
+                    $displayName = auth()->user()->name ?? auth()->user()->nama ?? 'Pengguna';
+                    echo mb_strlen($displayName) > 10 ? mb_substr($displayName, 0, 10) . '…' : $displayName;
+                @endphp
             </div>
-            <div class="text-xs text-base-content/50 leading-tight">
+            <div class="text-xs text-base-content/50 leading-tight capitalize">
                 {{ auth()->user()->role ?? 'Admin Sistem' }}
             </div>
         </div>
 
         <div class="avatar">
             <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
-                <span class="text-sm font-semibold leading-none">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                </span>
+                @php
+                    $fullName = auth()->user()->name ?? auth()->user()->nama ?? 'U';
+                    $nameParts = explode(' ', trim($fullName));
+                    $initials = strtoupper(mb_substr($nameParts[0], 0, 1));
+                    if (count($nameParts) > 1) {
+                        $initials .= strtoupper(mb_substr(end($nameParts), 0, 1));
+                    }
+                @endphp
+                <span class="text-sm font-semibold leading-none">{{ $initials }}</span>
             </div>
         </div>
     </div>

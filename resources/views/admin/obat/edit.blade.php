@@ -39,34 +39,17 @@
                         @enderror
                     </div>
 
-                    {{-- Kategori --}}
+                    {{-- Kemasan --}}
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">
-                            Kategori <span class="text-red-500">*</span>
+                            Kemasan
                         </label>
-                        <input type="text" name="kategori" value="{{ old('kategori', $obat->kategori) }}"
-                            placeholder="Masukkan kategori..."
+                        <input type="text" name="kemasan" value="{{ old('kemasan', $obat->kemasan) }}"
+                            placeholder="Contoh: Strip, Botol, Tube..."
                             class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
                                    focus:border-primary focus:outline-none
-                                   @error('kategori') border-red-500 @enderror"
-                            required>
-                        @error('kategori')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Stok --}}
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">
-                            Stok <span class="text-red-500">*</span>
-                        </label>
-                        <input type="number" name="stok" value="{{ old('stok', $obat->stok) }}"
-                            placeholder="Masukkan jumlah stok..."
-                            class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
-                                   focus:border-primary focus:outline-none
-                                   @error('stok') border-red-500 @enderror"
-                            required>
-                        @error('stok')
+                                   @error('kemasan') border-red-500 @enderror">
+                        @error('kemasan')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -77,7 +60,7 @@
                             Harga <span class="text-red-500">*</span>
                         </label>
                         <input type="number" name="harga" value="{{ old('harga', $obat->harga) }}"
-                            placeholder="Masukkan harga..."
+                            placeholder="Masukkan harga..." min="0"
                             class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
                                    focus:border-primary focus:outline-none
                                    @error('harga') border-red-500 @enderror"
@@ -87,20 +70,22 @@
                         @enderror
                     </div>
 
-                </div>
+                    {{-- Stok --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">
+                            Stok <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="stok" value="{{ old('stok', $obat->stok) }}"
+                            placeholder="Masukkan jumlah stok..." min="0"
+                            class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
+                                   focus:border-primary focus:outline-none
+                                   @error('stok') border-red-500 @enderror"
+                            required>
+                        @error('stok')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                {{-- Deskripsi --}}
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">
-                        Deskripsi
-                    </label>
-                    <textarea name="deskripsi" rows="3" placeholder="Masukkan deskripsi obat..."
-                        class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
-                               focus:border-primary focus:outline-none
-                               @error('deskripsi') border-red-500 @enderror">{{ old('deskripsi', $obat->deskripsi) }}</textarea>
-                    @error('deskripsi')
-                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 {{-- Buttons --}}

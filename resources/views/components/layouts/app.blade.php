@@ -33,16 +33,30 @@
             <div class="main-scroll">
 
                 @if(session('success'))
-                <div class="alert alert-success mb-4 rounded-xl shadow-sm">
+                <div class="alert alert-success mb-4 rounded-xl shadow-sm auto-dismiss">
                     <i class="fas fa-check-circle"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 @endif
 
+                @if(session('message') && session('type') === 'success')
+                <div class="alert alert-success mb-4 rounded-xl shadow-sm auto-dismiss">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('message') }}</span>
+                </div>
+                @endif
+
                 @if(session('error'))
-                <div class="alert alert-error mb-4 rounded-xl shadow-sm">
+                <div class="alert alert-error mb-4 rounded-xl shadow-sm auto-dismiss">
                     <i class="fas fa-circle-xmark"></i>
                     <span>{{ session('error') }}</span>
+                </div>
+                @endif
+
+                @if(session('message') && session('type') === 'error')
+                <div class="alert alert-error mb-4 rounded-xl shadow-sm auto-dismiss">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>{{ session('message') }}</span>
                 </div>
                 @endif
 
@@ -81,6 +95,17 @@
                 icon.className='fas fa-expand'
             }
         }
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.auto-dismiss').forEach(function (el) {
+                setTimeout(function () {
+                    el.style.transition = 'opacity 0.4s ease';
+                    el.style.opacity = '0';
+                    setTimeout(function () { el.remove(); }, 400);
+                }, 5000);
+            });
+        });
     </script>
 
     @stack('scripts')

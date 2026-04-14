@@ -6,13 +6,22 @@
             Data Obat
         </h2>
 
-        <a href="{{ route('obat.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 
-                  bg-primary hover:bg-primary/90 
-                  text-white text-sm font-semibold 
-                  rounded-xl transition">
-            <i class="fas fa-plus text-xs"></i>
-            Tambah Obat
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.export.obat') }}" class="inline-flex items-center gap-2 px-5 py-2.5 
+                      bg-green-600 hover:bg-green-700 
+                      text-white text-sm font-semibold 
+                      rounded-xl transition">
+                <i class="fas fa-file-excel text-xs"></i>
+                Export Excel
+            </a>
+            <a href="{{ route('obat.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 
+                      bg-primary hover:bg-primary/90 
+                      text-white text-sm font-semibold 
+                      rounded-xl transition">
+                <i class="fas fa-plus text-xs"></i>
+                Tambah Obat
+            </a>
+        </div>
     </div>
 
     {{-- Card --}}
@@ -28,6 +37,7 @@
                             <th class="px-6 py-4">Nama Obat</th>
                             <th class="px-6 py-4">Kemasan</th>
                             <th class="px-6 py-4">Harga</th>
+                            <th class="px-6 py-4">Stok</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -50,6 +60,22 @@
 
                             <td class="px-6 py-4 font-semibold text-slate-800">
                                 Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if($obat->stok <= 0)
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600">
+                                        Habis
+                                    </span>
+                                @elseif($obat->stok <= 5)
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                                        {{ $obat->stok }} (Rendah)
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-600">
+                                        {{ $obat->stok }}
+                                    </span>
+                                @endif
                             </td>
 
                             <td class="px-6 py-4 text-right">
@@ -85,7 +111,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center py-12 text-slate-400">
+                            <td colspan="5" class="text-center py-12 text-slate-400">
                                 <i class="fas fa-inbox text-3xl mb-3 block mx-auto"></i>
                                 Belum ada data obat
                             </td>

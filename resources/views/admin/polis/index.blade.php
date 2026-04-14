@@ -77,7 +77,7 @@
                         @empty
                         <tr>
                             <td colspan="3" class="text-center py-14 text-slate-400">
-                                <i class="fas fa-inbox text-3xl mb-3 block"></i>
+                                <i class="fas fa-inbox text-3xl mb-3 block mx-auto"></i>
                                 Belum ada data poli
                             </td>
                         </tr>

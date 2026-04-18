@@ -89,14 +89,16 @@
                     <table class="table w-full">
                         <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
                             <tr>
+                                <th class="px-4 py-3">No.</th>
                                 <th class="px-4 py-3">Nama Poli</th>
                                 <th class="px-4 py-3">Keterangan</th>
                                 <th class="px-4 py-3">Dokter</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
-                            @foreach($polis as $poli)
+                            @foreach($polis as $adIdx => $poli)
                             <tr class="border-t hover:bg-slate-50">
+                                <td class="px-4 py-3">{{ $adIdx + 1 }}</td>
                                 <td class="px-4 py-3 font-semibold">{{ $poli->nama_poli }}</td>
                                 <td class="px-4 py-3 text-slate-500">{{ Str::limit($poli->keterangan, 80) }}</td>
                                 <td class="px-4 py-3">

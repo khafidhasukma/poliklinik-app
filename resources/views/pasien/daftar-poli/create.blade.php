@@ -7,13 +7,6 @@
         <h2 class="text-2xl font-bold text-slate-800">Daftar Poli</h2>
     </div>
 
-    @if(session('error'))
-        <div class="alert alert-error mb-6 rounded-xl">
-            <i class="fas fa-circle-exclamation"></i>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
-
     <div class="card bg-base-100 shadow-md rounded-2xl border">
         <div class="card-body p-6">
             <form action="{{ route('pasien.daftar.store') }}" method="POST">
@@ -42,6 +35,10 @@
                     <select name="id_jadwal" id="jadwalSelect" class="w-full px-4 py-2 border-2 rounded-lg focus:border-primary focus:outline-none" required disabled>
                         <option value="">-- Pilih Poli Terlebih Dahulu --</option>
                     </select>
+                    <div id="jadwalWarning" class="hidden mt-2 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                        <i class="fas fa-circle-exclamation mt-0.5 shrink-0"></i>
+                        <span id="jadwalWarningText"></span>
+                    </div>
                     @error('id_jadwal') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -64,9 +61,17 @@
 
     @push('scripts')
     <script>
+        // Store jadwal data for validation
+        let jadwalData = {};
+
         document.getElementById('poliSelect').addEventListener('change', function() {
             const poliId = this.value;
             const jadwalSelect = document.getElementById('jadwalSelect');
+            const warning = document.getElementById('jadwalWarning');
+            const warningText = document.getElementById('jadwalWarningText');
+
+            warning.classList.add('hidden');
+            jadwalData = {};
 
             if (!poliId) {
                 jadwalSelect.disabled = true;
@@ -79,10 +84,16 @@
                 .then(data => {
                     jadwalSelect.disabled = false;
                     jadwalSelect.innerHTML = '<option value="">-- Pilih Jadwal --</option>';
+
                     data.forEach(jadwal => {
+                        jadwalData[jadwal.id] = jadwal;
+
                         const opt = document.createElement('option');
                         opt.value = jadwal.id;
-                        opt.textContent = `${jadwal.dokter.nama} — ${jadwal.hari}, ${jadwal.jam_mulai} - ${jadwal.jam_selesai}`;
+                        opt.textContent = `${jadwal.dokter.nama} — ${jadwal.hari}, ${jadwal.jam_mulai.substring(0,5)} - ${jadwal.jam_selesai.substring(0,5)}`;
+                        if (!jadwal.is_available) {
+                            opt.disabled = true;
+                        }
                         jadwalSelect.appendChild(opt);
                     });
 
@@ -93,6 +104,30 @@
                 .catch(() => {
                     jadwalSelect.innerHTML = '<option value="">Gagal memuat jadwal</option>';
                 });
+        });
+
+        // Warn immediately when an unavailable jadwal is selected
+        document.getElementById('jadwalSelect').addEventListener('change', function () {
+            const warning = document.getElementById('jadwalWarning');
+            const warningText = document.getElementById('jadwalWarningText');
+            const selected = jadwalData[this.value];
+
+            if (!selected || selected.is_available) {
+                warning.classList.add('hidden');
+                return;
+            }
+
+            let msg = '';
+            if (!selected.hari_ini) {
+                msg = `Jadwal ini hanya tersedia pada hari <strong>${selected.hari}</strong>. Pendaftaran akan ditolak jika dikirim hari ini.`;
+            } else {
+                const mulai   = selected.jam_mulai.substring(0, 5);
+                const selesai = selected.jam_selesai.substring(0, 5);
+                msg = `Pendaftaran hanya dibuka pukul <strong>${mulai}–${selesai}</strong>. Saat ini di luar jam pendaftaran.`;
+            }
+
+            warningText.innerHTML = msg;
+            warning.classList.remove('hidden');
         });
     </script>
     @endpush

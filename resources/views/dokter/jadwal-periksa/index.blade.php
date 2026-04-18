@@ -18,7 +18,7 @@
                 <table class="table w-full">
                     <thead class="bg-slate-50 text-slate-500 uppercase text-xs tracking-wider">
                         <tr>
-                            <th class="px-6 py-4">ID</th>
+                            <th class="px-6 py-4">No.</th>
                             <th class="px-6 py-4">Hari</th>
                             <th class="px-6 py-4">Jam Mulai</th>
                             <th class="px-6 py-4">Jam Selesai</th>
@@ -26,12 +26,12 @@
                         </tr>
                     </thead>
                     <tbody class="text-sm text-slate-700">
-                        @forelse($jadwals as $jadwal)
+                        @forelse($jadwals as $jIdx => $jadwal)
                         <tr class="border-t border-slate-100 hover:bg-slate-50 transition">
-                            <td class="px-6 py-4">{{ $jadwal->id }}</td>
+                            <td class="px-6 py-4">{{ $jIdx + 1 }}</td>
                             <td class="px-6 py-4 font-semibold">{{ $jadwal->hari }}</td>
-                            <td class="px-6 py-4">{{ $jadwal->jam_mulai }}</td>
-                            <td class="px-6 py-4">{{ $jadwal->jam_selesai }}</td>
+                            <td class="px-6 py-4">{{ substr($jadwal->jam_mulai, 0, 5) }}</td>
+                            <td class="px-6 py-4">{{ substr($jadwal->jam_selesai, 0, 5) }}</td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <a href="{{ route('dokter.jadwal-periksa.edit', $jadwal->id) }}" class="inline-flex items-center gap-1 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition">

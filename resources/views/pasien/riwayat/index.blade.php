@@ -14,6 +14,7 @@
                             <th>Poli</th>
                             <th>Dokter</th>
                             <th>Hari</th>
+                            <th>Tanggal</th>
                             <th>No. Antrian</th>
                             <th>Keluhan</th>
                             <th>Status</th>
@@ -27,6 +28,7 @@
                                 <td>{{ $riwayat->jadwalPeriksa->dokter->poli->nama_poli ?? '-' }}</td>
                                 <td class="font-medium">{{ $riwayat->jadwalPeriksa->dokter->nama }}</td>
                                 <td>{{ $riwayat->jadwalPeriksa->hari }}</td>
+                                <td>{{ \Carbon\Carbon::parse($riwayat->created_at)->format('d M Y') }}</td>
                                 <td>
                                     <span class="badge badge-primary badge-outline">{{ $riwayat->no_antrian }}</span>
                                 </td>
@@ -50,7 +52,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-8 text-slate-400">Belum ada riwayat pendaftaran</td>
+                                <td colspan="9" class="text-center py-8 text-slate-400">Belum ada riwayat pendaftaran</td>
                             </tr>
                         @endforelse
                     </tbody>

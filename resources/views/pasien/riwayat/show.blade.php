@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <span class="text-slate-500">Jadwal:</span>
-                    <span class="font-semibold ml-2">{{ $daftarPoli->jadwalPeriksa->hari }}, {{ $daftarPoli->jadwalPeriksa->jam_mulai }} - {{ $daftarPoli->jadwalPeriksa->jam_selesai }}</span>
+                    <span class="font-semibold ml-2">{{ $daftarPoli->jadwalPeriksa->hari }}, {{ substr($daftarPoli->jadwalPeriksa->jam_mulai, 0, 5) }} - {{ substr($daftarPoli->jadwalPeriksa->jam_selesai, 0, 5) }}</span>
                 </div>
                 <div>
                     <span class="text-slate-500">Tanggal Periksa:</span>
@@ -78,11 +78,40 @@
     </div>
 
     {{-- Total --}}
-    <div class="card bg-primary/5 border border-primary/20 rounded-2xl">
+    <div class="card bg-primary/5 border border-primary/20 rounded-2xl mb-6">
         <div class="card-body p-6">
             <div class="flex justify-between items-center">
                 <span class="text-lg font-bold text-slate-800">Total Biaya</span>
                 <span class="text-2xl font-bold text-primary">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</span>
+            </div>
+        </div>
+    </div>
+
+    {{-- Status Pembayaran --}}
+    <div class="card bg-base-100 shadow-md rounded-2xl border">
+        <div class="card-body p-6">
+            <h3 class="text-lg font-bold text-slate-800 mb-4">Status Pembayaran</h3>
+            <div class="flex items-center justify-between">
+                <div>
+                    @if($pembayaran && $pembayaran->status === 'lunas')
+                        <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
+                            <i class="fas fa-check-circle"></i> Lunas
+                        </span>
+                    @elseif($pembayaran && $pembayaran->status === 'menunggu_verifikasi')
+                        <span class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 text-sm font-semibold rounded-full">
+                            <i class="fas fa-clock"></i> Menunggu Verifikasi
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 text-sm font-semibold rounded-full">
+                            <i class="fas fa-exclamation-circle"></i> Belum Bayar
+                        </span>
+                    @endif
+                </div>
+                @if(!$pembayaran || $pembayaran->status === 'belum_bayar')
+                    <a href="{{ route('pasien.pembayaran.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-xl transition">
+                        <i class="fas fa-credit-card"></i> Bayar Tagihan
+                    </a>
+                @endif
             </div>
         </div>
     </div>

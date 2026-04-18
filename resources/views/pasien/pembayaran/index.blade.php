@@ -4,19 +4,6 @@
         <h2 class="text-2xl font-bold text-slate-800">Pembayaran</h2>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success mb-6 rounded-xl">
-            <i class="fas fa-check-circle"></i>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-error mb-6 rounded-xl">
-            <i class="fas fa-circle-exclamation"></i>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
-
     <div class="space-y-4">
         @forelse($pembayarans as $pembayaran)
             <div class="card bg-base-100 shadow-md rounded-2xl border">

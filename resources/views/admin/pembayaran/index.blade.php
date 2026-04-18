@@ -13,6 +13,7 @@
                             <th class="px-6 py-4">No</th>
                             <th class="px-6 py-4">Pasien</th>
                             <th class="px-6 py-4">Dokter</th>
+                            <th class="px-6 py-4">Tanggal Periksa</th>
                             <th class="px-6 py-4">Biaya</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
@@ -24,6 +25,7 @@
                             <td class="px-6 py-4">{{ $index + 1 }}</td>
                             <td class="px-6 py-4 font-semibold">{{ $pembayaran->pasien->nama ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $pembayaran->periksa->daftarPoli->jadwalPeriksa->dokter->nama ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($pembayaran->periksa->tgl_periksa)->format('d M Y H:i') }}</td>
                             <td class="px-6 py-4 font-semibold">Rp {{ number_format($pembayaran->periksa->biaya_periksa ?? 0, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">
                                 @if($pembayaran->status === 'lunas')
@@ -43,7 +45,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center py-12 text-slate-400">
+                            <td colspan="7" class="text-center py-12 text-slate-400">
                                 <i class="fas fa-inbox mx-auto text-3xl mb-3 block"></i>
                                 Belum ada data pembayaran
                             </td>

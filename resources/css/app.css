@@ -50,14 +50,26 @@
         @apply flex-1 p-[28px];
     }
 
+    /* Desktop collapsed */
+    .sidebar-fixed.collapsed {
+        width: 0 !important;
+        overflow: hidden;
+    }
+
     /* MOBILE */
     @media (max-width: 1024px) {
         .sidebar-fixed {
             @apply fixed left-0 -translate-x-full;
+            width: var(--sidebar-w) !important;
         }
 
         .sidebar-fixed.open {
             @apply translate-x-0;
+        }
+
+        .sidebar-fixed.collapsed {
+            width: var(--sidebar-w) !important;
+            overflow: visible;
         }
     }
 

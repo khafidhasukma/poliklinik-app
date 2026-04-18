@@ -19,7 +19,7 @@ use App\Http\Controllers\Pasien\RiwayatPendaftaranController;
 use App\Http\Controllers\Pasien\PembayaranController as PasienPembayaranController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -73,6 +73,7 @@ Route::middleware(['auth', 'role:dokter'])->prefix('dokter')->group(function () 
 
 Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () {
     Route::get('/dashboard', [PasienDashboardController::class, 'index'])->name('pasien.dashboard');
+    Route::get('/dashboard/antrian', [PasienDashboardController::class, 'antrian'])->name('pasien.dashboard.antrian');
 
     // Daftar Poli
     Route::get('/daftar', [DaftarPoliController::class, 'create'])->name('pasien.daftar.create');

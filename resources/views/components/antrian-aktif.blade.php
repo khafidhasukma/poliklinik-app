@@ -68,28 +68,3 @@
 
     </div>
 </div>
-
-@push('scripts')
-@vite(['resources/js/echo.js'])
-<script>
-    (function () {
-        const myJadwalId = {{ $activeRegistration->id_jadwal }};
-
-        function subscribeAntrian() {
-            if (!window.Echo) {
-                setTimeout(subscribeAntrian, 100);
-                return;
-            }
-            window.Echo.channel('antrian')
-                .listen('.antrian.updated', function (e) {
-                    if (parseInt(e.jadwalId) === myJadwalId) {
-                        const el = document.getElementById('sedangDilayani');
-                        if (el) el.textContent = e.nomorAntrian;
-                    }
-                });
-        }
-
-        subscribeAntrian();
-    })();
-</script>
-@endpush

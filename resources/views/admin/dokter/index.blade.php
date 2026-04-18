@@ -30,6 +30,7 @@
                     {{-- Table Head --}}
                     <thead class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
                         <tr>
+                            <th class="px-6 py-4">No.</th>
                             <th class="px-6 py-4">Nama Dokter</th>
                             <th class="px-6 py-4">Email</th>
                             <th class="px-6 py-4">No. KTP</th>
@@ -43,8 +44,10 @@
                     {{-- Table Body --}}
                     <tbody class="text-sm text-slate-700">
 
-                        @forelse($dokters as $dokter)
+                        @forelse($dokters as $dIdx => $dokter)
                         <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+
+                            <td class="px-6 py-4">{{ $dIdx + 1 }}</td>
 
                             <td class="px-6 py-4 font-semibold text-slate-800">
                                 {{ $dokter->nama }}
@@ -103,7 +106,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center py-16 text-slate-400">
+                            <td colspan="8" class="text-center py-16 text-slate-400">
                                 <i class="fas fa-inbox text-3xl mb-3 block mx-auto"></i>
                                 Belum ada data dokter
                             </td>

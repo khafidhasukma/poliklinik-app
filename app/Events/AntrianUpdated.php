@@ -4,11 +4,11 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AntrianUpdated implements ShouldBroadcast
+class AntrianUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,5 +31,13 @@ class AntrianUpdated implements ShouldBroadcast
     public function broadcastAs(): string
     {
         return 'antrian.updated';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'jadwalId'      => $this->jadwalId,
+            'nomorAntrian'  => $this->nomorAntrian,
+        ];
     }
 }

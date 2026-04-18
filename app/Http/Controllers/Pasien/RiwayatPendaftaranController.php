@@ -22,7 +22,7 @@ class RiwayatPendaftaranController extends Controller
     public function show($id)
     {
         $daftarPoli = DaftarPoli::where('id_pasien', Auth::id())
-            ->with(['jadwalPeriksa.dokter.poli', 'periksas.detailPeriksas.obat'])
+            ->with(['jadwalPeriksa.dokter.poli', 'periksas.detailPeriksas.obat', 'periksas.pembayaran'])
             ->findOrFail($id);
 
         $periksa = $daftarPoli->periksas->first();
@@ -31,6 +31,8 @@ class RiwayatPendaftaranController extends Controller
             return back()->with('error', 'Pemeriksaan belum dilakukan.');
         }
 
-        return view('pasien.riwayat.show', compact('daftarPoli', 'periksa'));
+        $pembayaran = $periksa->pembayaran;
+
+        return view('pasien.riwayat.show', compact('daftarPoli', 'periksa', 'pembayaran'));
     }
 }

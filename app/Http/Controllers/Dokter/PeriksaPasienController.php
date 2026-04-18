@@ -15,13 +15,29 @@ use Illuminate\Support\Facades\DB;
 
 class PeriksaPasienController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $jadwalIds = Auth::user()->jadwalPeriksa()->pluck('id');
 
-        $daftarPolis = DaftarPoli::whereIn('id_jadwal', $jadwalIds)
-            ->with(['pasien', 'jadwalPeriksa', 'periksas'])
-            ->orderBy('no_antrian')
+        $query = DaftarPoli::whereIn('id_jadwal', $jadwalIds)
+            ->with(['pasien', 'jadwalPeriksa', 'periksas']);
+
+        // Filter by status
+        if ($request->filled('status')) {
+            if ($request->status === 'belum') {
+                $query->whereDoesntHave('periksas');
+            } elseif ($request->status === 'sudah') {
+                $query->whereHas('periksas');
+            }
+        }
+
+        // Filter by tanggal daftar
+        if ($request->filled('tanggal')) {
+            $query->whereDate('created_at', $request->tanggal);
+        }
+
+        $daftarPolis = $query->orderBy('created_at', 'desc')
+            ->orderBy('no_antrian', 'asc')
             ->get();
 
         return view('dokter.periksa-pasien.index', compact('daftarPolis'));
@@ -98,16 +114,21 @@ class PeriksaPasienController extends Controller
                 'status' => 'belum_bayar',
             ]);
 
-            // Broadcast antrian update
-            event(new AntrianUpdated($daftarPoli->id_jadwal, $daftarPoli->no_antrian));
-
             DB::commit();
-
-            return redirect()->route('dokter.periksa-pasien.index')
-                ->with('success', 'Hasil pemeriksaan berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        // Broadcast AFTER commit so a missing Reverb server never rolls back real data
+        try {
+            event(new AntrianUpdated($daftarPoli->id_jadwal, $daftarPoli->no_antrian));
+        } catch (\Exception $e) {
+            // Reverb may be offline; log but do not fail the request
+            logger()->warning('AntrianUpdated broadcast failed: ' . $e->getMessage());
+        }
+
+        return redirect()->route('dokter.periksa-pasien.index')
+            ->with('success', 'Hasil pemeriksaan berhasil disimpan.');
     }
 }

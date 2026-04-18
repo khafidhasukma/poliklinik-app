@@ -1,8 +1,8 @@
 <header class="bg-base-100 border-b border-base-300 h-16 flex items-center px-6 gap-4 sticky top-0 z-30 shadow-sm">
 
-    {{-- Mobile Hamburger --}}
-    <button onclick="toggleSidebar()" class="btn btn-square btn-ghost lg:hidden">
-        <i data-lucide="menu" class="w-5 h-5"></i>
+    {{-- Sidebar Toggle (desktop + mobile) --}}
+    <button onclick="toggleSidebar()" id="sidebarToggleBtn" class="btn btn-square btn-ghost">
+        <i id="sidebarToggleIcon" class="fas fa-bars w-5 h-5"></i>
     </button>
 
     {{-- Breadcrumb --}}

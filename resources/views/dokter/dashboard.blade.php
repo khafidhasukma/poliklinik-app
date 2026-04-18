@@ -64,17 +64,19 @@
                     <table class="table w-full">
                         <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
                             <tr>
+                                <th class="px-4 py-3">No.</th>
                                 <th class="px-4 py-3">Hari</th>
                                 <th class="px-4 py-3">Jam Mulai</th>
                                 <th class="px-4 py-3">Jam Selesai</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
-                            @foreach($jadwals as $jadwal)
+                            @foreach($jadwals as $djIdx => $jadwal)
                             <tr class="border-t hover:bg-slate-50">
+                                <td class="px-4 py-3">{{ $djIdx + 1 }}</td>
                                 <td class="px-4 py-3 font-semibold">{{ $jadwal->hari }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->jam_mulai }}</td>
-                                <td class="px-4 py-3">{{ $jadwal->jam_selesai }}</td>
+                                <td class="px-4 py-3">{{ substr($jadwal->jam_mulai, 0, 5) }}</td>
+                                <td class="px-4 py-3">{{ substr($jadwal->jam_selesai, 0, 5) }}</td>
                             </tr>
                             @endforeach
                         </tbody>

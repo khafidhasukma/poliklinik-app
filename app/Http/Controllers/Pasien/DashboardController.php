@@ -13,21 +13,26 @@ class DashboardController extends Controller
     {
         $pasien = Auth::user();
 
-        // Get active registration (not yet examined)
+        // Get active registration for today (not yet examined)
         $activeRegistration = DaftarPoli::where('id_pasien', $pasien->id)
+            ->whereDate('created_at', today())
             ->whereDoesntHave('periksas')
             ->with(['jadwalPeriksa.dokter.poli'])
             ->first();
 
         // Get current serving number per jadwal
         $jadwals = JadwalPeriksa::with(['dokter.poli', 'daftarPolis' => function ($q) {
-            $q->orderBy('no_antrian');
+            $q->with(['periksas' => function ($q2) {
+                $q2->whereDate('tgl_periksa', today());
+            }])->orderBy('no_antrian');
         }])->get();
 
-        // Calculate "sedang dilayani" per jadwal
+        // Calculate "sedang dilayani" per jadwal — only count today's examinations
         $jadwalData = $jadwals->map(function ($jadwal) {
             $lastExamined = $jadwal->daftarPolis
-                ->filter(fn($dp) => $dp->periksas && $dp->periksas->count() > 0)
+                ->filter(function ($dp) {
+                    return $dp->periksas && $dp->periksas->count() > 0;
+                })
                 ->sortByDesc('no_antrian')
                 ->first();
 
@@ -45,5 +50,31 @@ class DashboardController extends Controller
         }
 
         return view('pasien.dashboard', compact('activeRegistration', 'jadwalData', 'sedangDilayani'));
+    }
+
+    /**
+     * AJAX endpoint for polling queue data.
+     */
+    public function antrian()
+    {
+        $jadwals = JadwalPeriksa::with(['dokter.poli', 'daftarPolis' => function ($q) {
+            $q->with(['periksas' => function ($q2) {
+                $q2->whereDate('tgl_periksa', today());
+            }])->orderBy('no_antrian');
+        }])->get();
+
+        $data = $jadwals->map(function ($jadwal) {
+            $lastExamined = $jadwal->daftarPolis
+                ->filter(fn($dp) => $dp->periksas && $dp->periksas->count() > 0)
+                ->sortByDesc('no_antrian')
+                ->first();
+
+            return [
+                'jadwal_id' => $jadwal->id,
+                'sedang_dilayani' => $lastExamined ? $lastExamined->no_antrian : 0,
+            ];
+        });
+
+        return response()->json($data);
     }
 }

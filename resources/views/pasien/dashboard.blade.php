@@ -35,6 +35,7 @@
                 <table class="table w-full">
                     <thead class="bg-slate-50">
                         <tr class="text-sm text-slate-500">
+                            <th>No.</th>
                             <th>Poli</th>
                             <th>Dokter</th>
                             <th>Hari</th>
@@ -43,12 +44,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($jadwalData as $item)
+                        @forelse($jadwalData as $jIdx => $item)
                             <tr class="hover:bg-slate-50 text-sm">
+                                <td>{{ $jIdx + 1 }}</td>
                                 <td>{{ $item['jadwal']->dokter->poli->nama_poli ?? '-' }}</td>
                                 <td class="font-medium">{{ $item['jadwal']->dokter->nama }}</td>
                                 <td>{{ $item['jadwal']->hari }}</td>
-                                <td>{{ $item['jadwal']->jam_mulai }} - {{ $item['jadwal']->jam_selesai }}</td>
+                                <td>{{ substr($item['jadwal']->jam_mulai, 0, 5) }} - {{ substr($item['jadwal']->jam_selesai, 0, 5) }}</td>
                                 <td>
                                     <span class="badge badge-primary badge-outline" data-jadwal-id="{{ $item['jadwal']->id }}">
                                         No. {{ $item['sedang_dilayani'] }}
@@ -57,7 +59,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-8 text-slate-400">Belum ada jadwal periksa</td>
+                                <td colspan="6" class="text-center py-8 text-slate-400">Belum ada jadwal periksa</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -65,5 +67,60 @@
             </div>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var retryCount = 0;
+
+        function initAntrianSocket() {
+            if (!window.Echo) {
+                retryCount++;
+                if (retryCount > 50) return;
+                setTimeout(initAntrianSocket, 200);
+                return;
+            }
+
+            window.Echo.channel('antrian')
+                .listen('.antrian.updated', function (e) {
+                    var jadwalId = parseInt(e.jadwalId);
+                    var nomorAntrian = parseInt(e.nomorAntrian);
+
+                    @if($activeRegistration)
+                    if (jadwalId === {{ $activeRegistration->id_jadwal }}) {
+                        var bannerEl = document.getElementById('sedangDilayani');
+                        if (bannerEl) bannerEl.textContent = nomorAntrian;
+                    }
+                    @endif
+
+                    var badge = document.querySelector('[data-jadwal-id="' + jadwalId + '"]');
+                    if (badge) badge.textContent = 'No. ' + nomorAntrian;
+                });
+        }
+
+        initAntrianSocket();
+
+        function pollAntrian() {
+            fetch('{{ route("pasien.dashboard.antrian") }}')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    data.forEach(function(item) {
+                        var badge = document.querySelector('[data-jadwal-id="' + item.jadwal_id + '"]');
+                        if (badge) badge.textContent = 'No. ' + item.sedang_dilayani;
+
+                        @if($activeRegistration)
+                        if (parseInt(item.jadwal_id) === {{ $activeRegistration->id_jadwal }}) {
+                            var bannerEl = document.getElementById('sedangDilayani');
+                            if (bannerEl) bannerEl.textContent = item.sedang_dilayani;
+                        }
+                        @endif
+                    });
+                })
+                .catch(function() {});
+        }
+
+        setInterval(pollAntrian, 5000);
+        pollAntrian();
+    });
+    </script>
 
 </x-layouts.app>

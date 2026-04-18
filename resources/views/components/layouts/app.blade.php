@@ -72,15 +72,24 @@
 
     <script>
         function toggleSidebar(){
-            const sidebar=document.getElementById('appSidebar')
-            const overlay=document.getElementById('sidebarOverlay')
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const icon    = document.getElementById('sidebarToggleIcon');
 
-            sidebar.classList.toggle('open')
-
-            overlay.style.display=
-            sidebar.classList.contains('open')
-            ? 'block'
-            : 'none'
+            if (window.innerWidth >= 1024) {
+                // Desktop: collapse/expand sidebar width
+                const isCollapsed = sidebar.classList.toggle('collapsed');
+                if (icon) {
+                    icon.className = isCollapsed ? 'fas fa-bars-staggered w-5 h-5' : 'fas fa-bars w-5 h-5';
+                }
+            } else {
+                // Mobile: slide in/out with overlay
+                const isOpen = sidebar.classList.toggle('open');
+                overlay.style.display = isOpen ? 'block' : 'none';
+                if (icon) {
+                    icon.className = isOpen ? 'fas fa-xmark w-5 h-5' : 'fas fa-bars w-5 h-5';
+                }
+            }
         }
 
         function toggleFullscreen(){

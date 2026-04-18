@@ -31,7 +31,7 @@ class PasienController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        User::create([
+        $pasien = User::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'no_ktp' => $request->no_ktp,
@@ -39,6 +39,10 @@ class PasienController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'pasien',
+        ]);
+
+        $pasien->update([
+            'no_rm' => date('Ym') . '-' . str_pad($pasien->id, 4, '0', STR_PAD_LEFT),
         ]);
 
         return redirect()->route('pasien.index')->with('message', 'Data Pasien berhasil di Tambah')->with('type', 'success');

@@ -27,7 +27,16 @@ class DaftarPoliController extends Controller
         }
 
         $polis = Poli::all();
-        $no_rm = $pasien->no_rm ?? date('Ym') . '-' . str_pad($pasien->id, 3, '0', STR_PAD_LEFT);
+
+        // Generate and save no_rm if patient doesn't have one yet (handles legacy users)
+        if (!$pasien->no_rm) {
+            $pasien->update([
+                'no_rm' => date('Ym') . '-' . str_pad($pasien->id, 4, '0', STR_PAD_LEFT),
+            ]);
+            $pasien->refresh();
+        }
+
+        $no_rm = $pasien->no_rm;
 
         return view('pasien.daftar-poli.create', compact('polis', 'no_rm'));
     }

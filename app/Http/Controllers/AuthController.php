@@ -52,7 +52,7 @@ class AuthController extends Controller
             return back()->withErrors(['no_ktp' => 'Nomor Ktp Sudah terdaftar']);
         }
 
-        User::create([
+        $user = User::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'no_ktp' => $request->no_ktp,
@@ -60,6 +60,10 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'pasien',
+        ]);
+
+        $user->update([
+            'no_rm' => date('Ym') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
         ]);
 
         return redirect()->route('login');

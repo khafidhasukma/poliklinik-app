@@ -29,7 +29,7 @@ class AuthController extends Controller
             }
         }
 
-        return back()->withErrors(['email' => 'Email atau Password Salah !']);
+        return back()->withErrors(['email' => 'Email atau Password Salah!']);
     }
 
     public function showRegister()
@@ -52,21 +52,23 @@ class AuthController extends Controller
             return back()->withErrors(['no_ktp' => 'Nomor Ktp Sudah terdaftar']);
         }
 
+        $lastPasien = User::where('role', 'pasien')->orderBy('id', 'desc')->first();
+        $lastId = $lastPasien ? $lastPasien->id + 1 : 1;
+        $no_rm = date('Ym') . '-' . str_pad($lastId, 3, '0', STR_PAD_LEFT);
+
         $user = User::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'no_ktp' => $request->no_ktp,
             'no_hp' => $request->no_hp,
+            'no_rm' => $no_rm,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'pasien',
         ]);
 
-        $user->update([
-            'no_rm' => date('Ym') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
-        ]);
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Anda.');
     }
 
     public function logout()

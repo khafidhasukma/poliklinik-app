@@ -105,30 +105,6 @@
                     jadwalSelect.innerHTML = '<option value="">Gagal memuat jadwal</option>';
                 });
         });
-
-        // Warn immediately when an unavailable jadwal is selected
-        document.getElementById('jadwalSelect').addEventListener('change', function () {
-            const warning = document.getElementById('jadwalWarning');
-            const warningText = document.getElementById('jadwalWarningText');
-            const selected = jadwalData[this.value];
-
-            if (!selected || selected.is_available) {
-                warning.classList.add('hidden');
-                return;
-            }
-
-            let msg = '';
-            if (!selected.hari_ini) {
-                msg = `Jadwal ini hanya tersedia pada hari <strong>${selected.hari}</strong>. Pendaftaran akan ditolak jika dikirim hari ini.`;
-            } else {
-                const mulai   = selected.jam_mulai.substring(0, 5);
-                const selesai = selected.jam_selesai.substring(0, 5);
-                msg = `Pendaftaran hanya dibuka pukul <strong>${mulai}–${selesai}</strong>. Saat ini di luar jam pendaftaran.`;
-            }
-
-            warningText.innerHTML = msg;
-            warning.classList.remove('hidden');
-        });
     </script>
     @endpush
 
